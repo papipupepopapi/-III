@@ -1,0 +1,479 @@
+\documentclass[a4paper,11pt,dvipdfmx]{jsarticle}
+
+\setcounter{secnumdepth}{4}
+
+\usepackage{amsmath,amssymb,amsthm,mathrsfs,amsfonts,latexsym}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[straightvoltages]{circuitikz}
+\usetikzlibrary{intersections,calc,arrows.meta,quotes, angles}
+\usepackage{fancybox}
+\usepackage{enumerate}
+\usepackage[hang,small,bf]{caption}
+\usepackage[subrefformat=parens]{subcaption}
+\captionsetup{compatibility=false}
+\usepackage{ascmac}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{nicematrix}
+\NiceMatrixOptions{cell-space-limits = 1pt}
+\usepackage{mathtools}
+\usepackage{braket}
+\usepackage[separate-uncertainty]{siunitx}
+\usepackage{float}
+\usepackage{makeidx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage[numbers]{natbib}
+\usepackage{booktabs}
+\usepackage{tensor}
+\usepackage{empheq}
+\usepackage{ulem}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable, skins, theorems}
+%\usepackage{physics}
+\usepackage[dvipdfmx,% 欧文ではコメントアウトする
+setpagesize=false,%
+bookmarks=true,%
+bookmarksdepth=tocdepth,%
+bookmarksnumbered=true,%
+colorlinks=true,%
+linkcolor=blue,%
+citecolor=red,%
+urlcolor=magenta,%
+pdftitle={},%
+pdfsubject={},%
+pdfauthor={},%
+pdfkeywords={}%
+]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{cleveref}
+\usepackage{autonum}
+
+\DeclareMathOperator{\gradop}{grad}
+\DeclareMathOperator{\divop}{div}
+\DeclareMathOperator{\rotop}{rot}
+\DeclareMathOperator{\curlop}{curl}
+\let\Re\relax
+\DeclareMathOperator{\re}{Re}
+\let\Im\relax
+\DeclareMathOperator{\im}{Im}
+
+\crefname{equation}{式}{式}% {環境名}{単数形}{複数形} \crefで引くときの表示
+\crefname{figure}{図}{図}
+\crefname{table}{表}{表}
+\crefname{algorithm}{Algorithm}{Algorithm}
+
+\crefname{section}{第}{第}
+\creflabelformat{section}{#2#1#3節}
+\crefname{subsection}{第}{第}
+\creflabelformat{subsection}{#2#1#3小節}
+\crefname{footnote}{脚注}{脚注}
+\creflabelformat{footnote}{#2#1#3}
+
+\definecolor{burgundy}{rgb}{0.5, 0.0, 0.13}
+\newtcbtheorem[number within=section]{mythm}{}%
+{fonttitle=\gtfamily\sffamily\bfseries\upshape,colframe=burgundy,colback=burgundy!2!white,rightrule=0pt,leftrule=0pt,bottomrule=2pt,colbacktitle=burgundy,theorem style=standard,breakable,arc=0pt}{thm}
+\crefname{thm}{定理}{定理}
+
+\theoremstyle{definition}% 日本語用．定理とか斜体にならないようにする
+\newtheorem{theorem}{定理}
+\crefname{theorem}{定理}{定理}
+\newtheorem*{theorem*}{定理}
+\crefname{theorem*}{定理}{定理}
+\newtheorem{lemma}{補題}
+\crefname{lemma}{補題}{補題}
+\newtheorem{corollary}{系}
+\crefname{corollary}{系}{系}
+\newtheorem*{proof*}{証明}
+\crefname{proof*}{証明}{証明}
+\newtheorem{assumption}{仮定}
+\crefname{assumption}{仮定}{仮定}
+\newtheorem{definition}[theorem]{定義}
+\crefname{definition}{定義}{定義}
+\newtheorem*{definition*}{定義}
+\crefname{definition*}{定義}{定義}
+\newtheorem{remark}{注意}
+\crefname{remark}{注意}{注意}
+\newtheorem{proposition}{命題}
+\crefname{proposition}{命題}{命題}
+
+\renewcommand{\thefootnote}{*\arabic{footnote}}
+\newcommand{\crefpairconjunction}{と}
+\newcommand{\crefrangeconjunction}{から}
+\newcommand{\crefmiddleconjunction}{，}
+\newcommand{\creflastconjunction}{，および}
+\newcommand{\two}{\mathrm{I}\hspace{-1.2pt}\mathrm{I}}
+\newcommand{\three}{\mathrm{I}\hspace{-1.2pt}\mathrm{I}\hspace{-1.2pt}\mathrm{I}}
+\newcommand{\four}{\mathrm{I}\hspace{-1.5pt}\mathrm{V}}
+\newcommand{\six}{\mathrm{V}\hspace{-1.5pt}\mathrm{I}}
+\newcommand{\seven}{\mathrm{V}\hspace{-1.5pt}\mathrm{I}\hspace{-1.5pt}\mathrm{I}}
+\newcommand{\eight}{\mathrm{V}\hspace{-1.5pt}\mathrm{I}\hspace{-1.5pt}\mathrm{I}\hspace{-1.5pt}\mathrm{I}}
+\newcommand{\nine}{\mathrm{I}\hspace{-1.5pt}\mathrm{X}}
+\newcommand{\ctext}[1]{\textcircled{\raise-0.2ex\hbox{#1}}}
+\newcommand{\ketbra}[2]{\Ket{#1}\!\Bra{#2}}
+
+\numberwithin{equation}{section}%式番号に節番号もふる
+\numberwithin{theorem}{section} %定理番号に節番号もふる
+%\mathtoolsset{showonlyrefs=true}％参照時以外は番号が振られない,hyperrefとかぶってる
+
+%テキストの表示領域の調節
+\setlength{\textwidth}{\paperwidth}
+\addtolength{\textwidth}{-40truemm}
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-45truemm}
+
+%余白の調節
+\setlength{\topmargin}{-25.4truemm}
+\setlength{\evensidemargin}{-5.4truemm}
+\setlength{\oddsidemargin}{-5.4truemm}
+\setlength{\headheight}{17pt}
+\setlength{\headsep}{10mm}
+\addtolength{\headsep}{-17pt}
+\setlength{\footskip}{15mm}
+%\setlength{\columnseprule}{0.4pt}
+
+\title{固体物理学\(\three\)}
+\author{05231527 小島悠杜}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+%\tableofcontents
+
+A. トポロジカル物性
+
+B. 強相関電子系
+
+\section{物性物理におけるトポロジー}
+\subsection{ベリー位相，ベリー接続，ベリー曲率}
+\begin{itemize}
+  \item 幾何学的位相
+  
+  まず，エネルギー縮退のない系を考える。
+
+  \begin{align}
+    \mathcal{H}(t)&: \ \text{時間依存するハミルトニアン} \\
+    \left\{\ket{n(t)}\right\}&: \ \mathcal{H}(t)\text{の固有状態で正規直交完全系}
+  \end{align}
+  とすると
+  \begin{equation}
+    \mathcal{H}(t)\ket{n(t)}=E_n\ket{n(t)}.\tag{1.1.1}
+  \end{equation}
+  \(\sum_{n}\ketbra{n(t)}{n(t)}=\mathbbm{1}\)より
+  \begin{equation}
+    \ket{\psi(t)}=\sum_n C_n(t)\ket{n(t)}\tag{1.1.2}
+  \end{equation}
+  となる。ただし，\(C_n\coloneq\braket{n(t)|\psi(t)}\)。時間依存するシュレディンガー方程式より
+  \begin{align}
+    i\hbar\frac{d}{dt}\ket{\psi(t)}=\mathcal{H}(t)\ket{\psi(t)} \Longrightarrow i\hbar\sum_n\left(\dot{C_n}\ket{n(t)}+C_n\dot{\ket{n(t)}}\right)=\sum_nE_nC_n\ket{n(t)}.
+  \end{align}
+  両辺に\(\bra{m(t)}(m\neq n)\)を作用させると
+  \begin{equation}
+    i\hbar\dot{C_m}+i\hbar\sum_n C_n\braket{m|\dot{n}}=E_mC_m. \tag{1.1.3}
+  \end{equation}
+  ここで
+  \begin{equation}
+    \begin{dcases}
+      \frac{d}{dt}\braket{n|m}=\braket{\dot{n}|m}+\braket{n|\dot{m}}=0 \Longrightarrow \braket{\dot{n}|m}=-\braket{n|\dot{m}} \tag{1.1.4,\ 1.1.5}\\
+      \frac{d}{dt}\braket{n|\mathcal{H}|m}=\braket{\dot{n}|m}E_m+\braket{n|\dot{\mathcal{H}}|m}+\braket{n|\dot{m}}E_n=0 
+    \end{dcases}
+  \end{equation}
+  \begin{equation}
+    \therefore \braket{n|\dot{m}}=-\frac{\braket{n|\dot{\mathcal{H}}|m}}{(E_n-E_m)} \tag{1.1.6}
+  \end{equation}
+  (1.1.6)を(1.1.3)に代入すると
+  \begin{equation}
+    i\hbar\dot{C}_m+i\hbar C_m\braket{m|\dot{m}}+\sum_{n\neq m}\frac{\braket{m|\dot{\mathcal{H}}|n}}{E_n-E_m}C_n=C_mE_m
+  \end{equation}
+  \begin{equation}
+    \therefore \frac{d}{dt}C_m(t)=\frac{1}{i\hbar}E_m(t)C_m(t)-C_m(t)\braket{m|\dot{m}}-\sum_{n\neq m}\frac{\braket{m|\dot{\mathcal{H}}|n}}{E_n-E_m}C_n(t)
+  \end{equation}
+  \(\sum_{n\neq m}\frac{\braket{m|\dot{\mathcal{H}}|n}}{E_n-E_m}\ll1\)と仮定して無視する(断熱近似)と
+  \begin{equation}
+    \frac{d}{dt}C_m(t)=\frac{1}{i\hbar}E_m(t)C_m(t)-\braket{m|\dot{m}}C_m(t).
+  \end{equation}
+  微分方程式を解くと
+  \begin{equation}
+    C_m(t)=C_m(0)\exp\left(i\theta_m(t)\right)\cdot\exp\left(i\gamma_m(t)\right)
+  \end{equation}
+  \begin{equation}
+    \begin{dcases}
+      \theta_m(t)\coloneq-\frac{1}{\hbar}\int_{0}^{t}E_m(t')dt' \ \text{\textcolor{blue}{動的位相 dynamical phase}} \\
+      \gamma_m(t)\coloneq i\int_{0}^{t}\braket{m(t')|\dot{m}(t')}dt' \ \text{\textcolor{blue}{幾何学的位相 geometric phase}}
+    \end{dcases}
+  \end{equation}
+  本当に位相?
+  \begin{align}
+    \theta_m&\cdots\text{明らかに実数} \\
+    \gamma_m&\cdots\frac{d}{dt}\braket{m|m}=\braket{\dot{m}|m}+\braket{m|\dot{m}}=0\Longrightarrow 2\re\left[\braket{m|\dot{m}}\right]=0\Longrightarrow\braket{m|\dot{m}}\text{は純虚数}\Longrightarrow\gamma_m\text{は実数}
+  \end{align}
+
+  \item パラメータ\(\bm{R}(t)\)を通じてのみ\(t\)依存する場合
+  
+  \begin{equation}
+    \begin{alignedat}{2}
+      \mathcal{H}(t)&\longrightarrow & \mathcal{H}\left(\bm{R}(t)\right) & \\
+      (1.1.9)&\longrightarrow & \theta_m(t)&\coloneq-\frac{1}{\hbar}{\int_{\bm{R_0}}^{\bm{R}}}_{C}E(\bm{R}')d\bm{R}' \\
+      &&\gamma_m(t)&\coloneq i{\int_{\bm{R_0}}^{\bm{R}}}_C\braket{m(\bm{R}')|\nabla_{\bm{R}'}m(\bm{R}')}d\bm{R}'
+    \end{alignedat}
+    \tag{1.1.10}
+  \end{equation}
+  ここで\textcolor{blue}{ベリー接続}を\(\bm{A}_m(\bm{R})\coloneq i\braket{m(\bm{R})|\nabla_{\bm{R}}|m(\bm{R})}(1.1.11)\)と定義すると
+  \begin{equation}
+    \gamma_m(\bm{R})={\int_{\bm{R_0}}^{\bm{R}}}_C\bm{A}_m(\bm{R}')d\bm{R}'\tag{1.1.12}
+  \end{equation}
+
+
+  \item ベリー位相
+  
+  局所ゲージ変換\(\ket{(\bm{R})}\to\ket{n'(\bm{R})}=e^{i\phi(\bm{R})}\ket{n(\bm{R})}\)を考える。
+  \begin{align}
+    \bm{A}_n(\bm{R})\to \bm{A}'_{n}(\bm{R})&=ie^{-i\phi}\bra{m}\nabla_{\bm{R}}(e^{i\phi}\ket{m}) \\
+    &=\bm{A}_m(\bm{R})-\nabla_{\bm{R}}\phi(\bm{R})
+  \end{align}
+  これはゲージ不変ではない。また，
+  \begin{align}
+    \gamma_m\to\gamma'_m&=\int_C(\bm{A}_m(\bm{R}')-\nabla_{\bm{R}'}\phi(\bm{R}'))d\bm{R}' \\
+    &=\gamma_m(\bm{R})-\left[\phi(\bm{R})-\phi(\bm{R}_0)\right]
+  \end{align}
+  \(\Longrightarrow\)closed loopを考えれば良い!
+  \begin{align}
+    \gamma_n(\bm{R})&\coloneq \oint_C\sum_\mu \Braket{n(\bm{R})|\frac{\partial n}{\partial R_\mu}}dR_\mu \\
+    &=i\oint_C \braket{n(\bm{R})|\nabla_{\bm{R}}|n(\bm{R})}d\bm{R} \\
+    &=\oint_C \bm{A}(\bm{R})d\bm{R}\tag{1.1.13}
+  \end{align}
+
+  \item ベリー曲率\(\Omega\) 
+  
+  ストークスの定理が使えるように定義
+  \begin{equation}
+    \bm{\Omega}(\bm{R})\coloneq \nabla_{\bm{R}}\times \bm{A}(\bm{R})\tag{1.1.14}
+  \end{equation}
+  \begin{equation}
+    \therefore \gamma_n=\oint\bm{A}_nd\bm{R}=\int_S\bm{\Omega} d\bm{S}
+  \end{equation}
+\end{itemize}
+
+\begin{mythm}{まとめ}{}
+Berry phase
+\begin{align}
+  \gamma_n(\bm{R})&\coloneq i\oint_C \braket{n(\bm{R}')|\nabla_{\bm{R}'}|n(\bm{R}')}d\bm{R}' \\
+  &=\oint_C\bm{A}d\bm{R}'=\int_S\bm{\Omega}d\bm{S}
+\end{align}
+
+Berry connection 
+\begin{equation}
+  \bm{A}_n(\bm{R})\coloneq i\braket{n(\bm{R})|\nabla_{\bm{R}}|n(\bm{R})}
+\end{equation}
+
+Berry curvature 
+\begin{equation}
+  \bm{\Omega}(\bm{R})\coloneq \nabla_{\bm{R}}\times \bm{A}(\bm{R})
+\end{equation}
+(1.1.15)
+\end{mythm}
+
+\subsection{具体例}
+\begin{enumerate}[1.]
+  \item アハラノフボーム効果
+  
+  \begin{itemize}
+    \item \(A\to B \to D\)と\(A\to C \to D\)で経路差ゼロ
+    \item 磁場はソレノイドコイルの中のみに存在，経路上はゼロ
+  \end{itemize}
+
+  \(\Longrightarrow\)古典的には干渉は生じない?
+
+  \textcolor{blue}{\(\Longrightarrow\)量子力学ではベクトルポテンシャルが位相に現れ，干渉を起こす。}
+
+  ソレノイドから十分離れた\(\bm{r}=\bm{R}_0\)(経路上の点)でベクトルポテンシャルはゼロとする。これは基準点の設定なのでいつでもできる。そのときのシュレディンガー方程式の解を\(\psi_0(\bm{r}-\bm{R}_0)\)とする。ベクトルポテンシャルが存在しないとみなしたときには
+  \begin{equation}
+    -\frac{\hbar^2}{2m}\nabla^2\psi_0(\bm{r}-\bm{R}_0)=E\psi_0(\bm{r}-\bm{R}_0)\tag{1.2.1}
+  \end{equation}
+  が成り立つ。実際にはベクトルポテンシャルが経路上に存在するが，(1.2.1)と同じ固有値，(位相のみ異なる)固有状態のはず。
+  \begin{equation}
+    \therefore \psi(\bm{r})=e^{i\theta(\bm{r})}\psi_0(\bm{r}-\bm{R}_0)\tag{1.2.2}
+  \end{equation}
+  \begin{equation}
+    \frac{1}{2m}\left(-i\hbar\nabla +\frac{e}{c}\bm{A}(\bm{r})\right)^2\psi(\bm{r})=E\psi(\bm{r})\tag{1.2.3}
+  \end{equation}
+  \(\theta\)は(1.2.3)をみたすように決める。
+  \begin{equation}
+    \theta(\bm{r})=-\frac{e}{\hbar c}\int_{\bm{R}_0}^{\bm{r}}\bm{A}(\bm{x})d\bm{x}
+  \end{equation}
+  \begin{align}
+    \therefore \Delta\theta&\coloneq \theta_{A\to B \to D}-\theta_{A\to C \to D} \\
+    &=-\frac{e}{\hbar c}\oint\bm{A}d\bm{x}=-\frac{e}{\hbar c}\Phi=-2\pi \frac{\Phi}{\Phi_0}\neq0 \ \left(\Phi_0\coloneq \frac{2\pi \hbar c}{|e|}: \ \text{\textcolor{blue}{磁束量子}}\right)(1.2.4)
+  \end{align}
+  \begin{itemize}
+    \item ベリー位相との対応
+    
+    \(\bm{R}(t)\)を実空間の位置ベクトルとすると，
+
+    ベリー接続\(\to\)ベクトルポテンシャル，ベリー曲率\(\to\)磁場，ベリー位相\(\to\)アハラノフボーム位相
+
+    ソレノイドコイルの外，位置\(\bm{R}\)に置かれた箱中の電子を考える。
+  \begin{equation}
+    \left\{\frac{1}{2m}\left(-i\hbar\nabla+\frac{e}{c}\bm{A}\right)^2+U(\bm{r}-\bm{R})\right\}\psi(\bm{r})=E\psi(\bm{r})
+  \end{equation}
+  \(\bm{A}\)が全領域でゼロのときの解を\(\psi_0(\bm{r}-\bm{R})\)とすると
+  \begin{equation}
+    \psi(\bm{r})=\exp\left(-i\frac{e}{\hbar c}\int_{\bm{R}}^{\bm{r}}\bm{A}(\bm{x})d\bm{x}\right)\psi_0(\bm{r}-\bm{R})
+  \end{equation}
+  ※\(\psi_0\)にはglobal phaseの任意性があるので，箱内で\(\psi_0\)が実数になるように選ぶ。(\textcolor{red}{?})
+
+  ベリー接続
+  \begin{align}
+    \bm{A}_B&=i\int d^3r \psi(\bm{r})\nabla_{\bm{R}}\psi(\bm{r}) \\
+    &=\frac{e}{\hbar c}\bm{A}\int\psi^\ast\psi d^3r +i\int \psi_0^\ast\nabla_{\bm{R}}\psi_0d^3r
+  \end{align}
+  第2項目は\(\psi_0\)が実数であることから
+  \begin{equation}
+    \int \psi\nabla\psi d^3r=\frac{1}{2}\nabla\int\psi^2d^3r
+  \end{equation}
+  を考えると0。
+  \begin{equation}
+    \therefore \bm{A}_B=\frac{e}{\hbar c}\bm{A}
+  \end{equation}
+  ベリー位相
+  \begin{equation}
+    \gamma=\oint \bm{A}_B d\bm{R}=-\frac{e}{\hbar c}\int\bm{A} d\bm{S}=-2\pi\frac{\Phi}{\Phi_0}
+  \end{equation}
+  \end{itemize}
+
+  \item 飛びあり
+  
+  これを使ってベリー接続等を計算してみる。
+  \begin{align}
+    i\braket{\bm{R}_+|\frac{\partial}{\partial \theta}|\bm{R}_-}&=i\braket{\bm{R}_-|\frac{\partial}{\partial\theta}|\bm{R}_-}0 \\
+    i\braket{\bm{R}_+|\frac{\partial}{\partial\phi}|\bm{R}_+}&=
+    \begin{pNiceMatrix}
+    e^{i\phi}\cos\frac{\theta}{2} & \sin\frac{\theta}{2}
+    \end{pNiceMatrix}
+    \begin{pNiceMatrix}
+    e^{-i\phi}\cos\frac{\theta}{2} \\
+    0
+    \end{pNiceMatrix}
+    =\cos^2\frac{\theta}{2} \\
+    i\braket{\bm{R}_-|\frac{\partial}{\partial\phi}|\bm{R}_-}&=\sin^2\frac{\theta}{2}
+  \end{align}
+  球面座標系では
+  \begin{equation}
+    \nabla=\bm{e}_R\frac{\partial}{\partial R}+\bm{e}_\theta\frac{1}{R}\frac{\partial}{\partial\phi}+\bm{e}_\phi\frac{1}{R\sin\theta}\frac{\partial}{\partial\phi}
+  \end{equation}
+  より
+  \begin{align}
+    \bm{A}^+&=i\braket{\bm{R}_+|\nabla|\bm{R}_+}=\frac{\cos^2\frac{\theta}{2}}{R\sin \theta}\bm{e}_\phi=\frac{1+\cos\theta}{2R\sin\theta}\bm{e}_\phi \\
+    \bm{A}^-&=\frac{\sin\frac{\theta}{2}}{R\sin\theta}\bm{e}_\phi=\frac{1-\cos\theta}{2R\sin\theta}\bm{e}_\phi\tag{1.2.9}
+  \end{align}
+  \begin{align}
+    \nabla\times\bm{A}&=\frac{1}{R^2\sin\theta}\left[\frac{\partial}{\partial\theta}(R\sin\theta A_\phi)-\frac{\partial}{\partial\phi}(RA_\theta)\right]\bm{e}_R+\frac{1}{R\sin\theta}\left[\frac{\partial}{\partial\phi}A_R-\frac{\partial}{\partial R}(R\sin\theta A_\phi)\right]\bm{e}_\theta+\frac{1}{R}\left[\frac{\partial}{\partial R}(RA_\theta)-\frac{\partial}{\partial\theta}A_R\right]\bm{e}_\phi
+  \end{align}
+  より
+  \begin{align}
+    \bm{\Omega}^\pm&=\nabla\times\bm{A}^\pm=\frac{\mp 1}{2R^2}\bm{e}_R=\mp\frac{\bm{R}}{2R^3}\tag{1.2.10}
+  \end{align}
+  ベリー位相は
+  \begin{align}
+    \gamma^\pm&=\int_{\text{球面}}\bm{\Omega}^\pm d\bm{S}=\mp\int\frac{1}{2R^2}R^2\sin\theta d\theta d\phi \\
+    &=\mp\int\sin\theta d\theta d\phi \\
+    &=\mp2\pi \tag{1.2.11}
+  \end{align}
+  電磁気学を思い出すと
+  \begin{equation}
+    \nabla \cdot\bm{E}=4\pi\rho, \quad \nabla\cdot\bm{B}=4\pi\rho_{\text{m}}\to\int\bm{B}d\bm{S}=4\pi Q_{\text{m}}
+  \end{equation}
+  なので，モノポールチャージ\(Q_{\text{m}}=\mp1/2\)を意味する。
+
+  \begin{equation}
+    \bm{A}^\pm=\frac{1\pm\cos\theta}{R\sin\theta}\bm{e}_\phi\rightarrow \theta=0,\pi\text{で}A^-,A^+\text{がそれぞれ定義できない}
+  \end{equation}
+  固有ベクトルが北極，南極で一意に定まっていないことに起因する。
+  \begin{equation}
+    \theta=\pi \quad \ket{\bm{R}_+}=\begin{pNiceMatrix}
+      0 \\
+      1
+    \end{pNiceMatrix}, \quad \ket{\bm{R}_-}=\begin{pNiceMatrix}
+      -e^{i\phi} \\
+      0
+    \end{pNiceMatrix}
+  \end{equation}
+  \begin{equation}
+    \theta=0 \quad \ket{\bm{R}_+}=\begin{pNiceMatrix}
+      e^{-i\phi} \\
+      0
+    \end{pNiceMatrix}, \quad \ket{\bm{R}_-}=\begin{pNiceMatrix}
+      0 \\
+      1
+    \end{pNiceMatrix}
+  \end{equation}
+  よってゲージ\(\psi\)を\(\psi=-\phi\)として選んだ
+  \begin{equation}
+    \ket{\bm{R}_+}^\two=\begin{pNiceMatrix}
+      \cos\frac{\theta}{2} \\
+      e^{i\phi}\sin\frac{\theta}{2}
+    \end{pNiceMatrix},\quad 
+    \ket{\bm{R}_-}^\two=\begin{pNiceMatrix}
+      \sin\frac{\theta}{2} \\
+      e^{i\phi}\cos\frac{\theta}{2}
+    \end{pNiceMatrix}
+  \end{equation}
+  を赤道でつぎはぎして問題を解決する。
+  
+\end{enumerate}
+
+\subsection{ベリー曲率の別表式}
+  \begin{equation}
+    \bm{\Omega}^n=\nabla\times\bm{A}^n
+  \end{equation}
+  を成分表示する。
+  \begin{align}
+    \Omega^n_k&=\epsilon_{ijk}\partial_iA^n_j \\
+    &=i\epsilon_{ijk}\partial_i\left(\braket{n(\bm{R})|\partial_jn(\bm{R})}\right) \\
+    &=i\epsilon_{ijk}\left\{\braket{\partial_in(\bm{R})|\partial_jn(\bm{R})}+\braket{n(\bm{R})|\partial_i\partial_jn(\bm{R})}\right\} \because\text{対称と反対称の縮約}\\
+    &=i\epsilon_{ijk}\braket{\partial_in(\bm{R})|\partial_jn(\bm{R})} \tag{1.3.1}
+  \end{align}
+  ここで\(\mathbbm{1}=\sum_m\ketbra{m(\bm{R})}{m(\bm{R})}\)を挿入
+  \begin{align}
+    \Omega^n_k&=i\sum_m\epsilon_{ijk}\braket{\partial_in|m}\braket{m|\partial_jn} \\
+    &=i\sum_{m\neq m}\epsilon_{ijk}\braket{\partial_in|m}\braket{m|\partial_jn}\tag{1.3.2}
+  \end{align}
+  ここで\(\ket{n}\)は\(\mathcal{H}\)の固有状態なので
+  \begin{equation}
+    \mathcal{H}(\bm{R})\ket{n(\bm{R})}=E_n(\bm{R})\ket{n(\bm{R})}
+  \end{equation}
+  両辺\(\partial_i\)
+  \begin{equation}
+    \frac{\partial\mathcal{H}}{\partial R_i}\ket{n}+\mathcal{H}\ket{\partial_in}=\frac{\partial E_n}{\partial R_i}\ket{n}+E_n\ket{\partial_in}
+  \end{equation}
+  両辺\(\bra{m},m\neq n\)
+  \begin{equation}
+    \bra{m}\frac{\partial\mathcal{H}}{\partial R_i}\ket{n}+E_m\braket{m|\partial_in}=E_n\braket{m|\partial_in}
+  \end{equation}
+  \begin{equation}
+    \therefore \braket{m|\partial_in}=\frac{\braket{m|\frac{\partial\mathcal{H}}{\partial R_i}|n}}{E_n-E_m}
+  \end{equation}
+  (1.3.2)に代入して
+  \begin{equation}
+    \Omega^n_i(\bm{R})=i\sum_{m\neq n}\epsilon_{ijk}\frac{\braket{n|\frac{\partial\mathcal{H}}{\partial R_i}|m}\braket{m|\frac{\partial \mathcal{H}}{\partial R_j}|n}}{(E_n-E_m)^2}\tag{1.3.3}
+  \end{equation}
+  または，ベクトル表示で
+  \begin{equation}
+    \bm{\Omega}^n=i\sum_{m\neq n}\frac{\braket{n|\nabla\mathcal{H}|m}\times\braket{m|\nabla\mathcal{H}|n}}{(E_n-E_m)^2}\tag{1.3.4}
+  \end{equation}
+
+  \subsection{Bloch状態のベリー曲率}
+  物質中の電子は波数\(\bm{k}\)で特徴づけられるBloch状態
+  \begin{equation}
+    \psi_{n,\bm{k}}(\bm{r})=e^{i\bm{k}\cdot\bm{r}}u_{n,\bm{k}}(\bm{r})\tag{1.4.1}
+  \end{equation}
+%\bibliographystyle{aip}
+%\bibliography{}
+\end{document}
